@@ -90,14 +90,22 @@ def insert_path():
     return folder_path
 
 
+def prepare_dictionary_for_treeview():
+    for key, values in file_extensions.items():
+        key = extensions_treeview.insert("", tk.END, text=f"{key}")
+        for value in values:
+            extensions_treeview.insert(key, tk.END, text=f"{value}")
+
+
 # Create the app's main window
 root = ttk.Window(themename="darkly")
 root.title("File Organization")
 root.iconbitmap('images/plan_organizing_schedule_agenda_managing_planning_icon_230470.ico')
-root.geometry("1280x800")
+root.geometry("800x800")
 
 root.resizable(False, False)
 
+# ----------------- Start of Title ---------------------
 # Create the frame for the title
 title_frame = tk.Frame(root)
 title_frame.pack(fill=tk.X, anchor='center', padx=30, pady=10)
@@ -106,7 +114,7 @@ title_h1 = font.Font(family="Helvetica", size=20, weight="bold")
 
 # Create title label
 title_label = ttk.Label(title_frame, text="TrashFile", font=title_h1)
-title_label.pack(pady="10", anchor="w")
+title_label.pack(pady="10", side="top")
 
 # Get the width of the frame
 title_frame.update_idletasks()
@@ -118,26 +126,43 @@ canvas.pack(fill=tk.X, pady=(15, 10))
 
 # Draw the underline
 canvas.create_line(0, 0, frame_width, 0, fill="grey")
+# ----------------- End of Title ---------------------
+
+
+# ----------------- Start of the actions panel---------------------
 
 # Create and add the actions label
-actions_frame = ttk.LabelFrame(root, text="Actions", width=250, height=800)
-actions_frame.pack(expand=True, anchor="e", pady=5, padx=30)
+actions_frame = ttk.LabelFrame(root, text="Actions", width=250, height=250)
+actions_frame.pack(expand=True, side="left", anchor="nw", padx="25")
 actions_frame.pack_propagate(False)
-
-# Create folder selection
-folder_label = ttk.Label(actions_frame, text="Select Folder:")
-folder_label.pack(pady=5, side='top')
-folder_entry = ttk.Entry(actions_frame, width=50)
-folder_entry.pack(pady=5, side='top')
-browse_button = ttk.Button(actions_frame, text="Browse", command=insert_path)
-browse_button.pack(pady=5, side='top')
 
 # Create and add the buttons for actions
 organize_button = ttk.Button(actions_frame, text="Organize your files", width=20, command=organize_files)
 organize_button.pack(pady=5, side='top')
 
 # Create and add the button to show json data
-show_json_button = ttk.Button(actions_frame, text="Show Extensions", width=20)
+show_json_button = ttk.Button(actions_frame, text="Show Extensions", width=20, command=prepare_dictionary_for_treeview)
 show_json_button.pack(pady=5, side='top')
 
+# Create folder selection
+folder_label = ttk.Label(actions_frame, text="Select Folder:")
+folder_label.pack(pady=5, side='top')
+
+folder_entry = ttk.Entry(actions_frame, width=25)
+folder_entry.pack(pady=5, side='top')
+
+browse_button = ttk.Button(actions_frame, text="Browse", command=insert_path)
+browse_button.pack(pady=5, side='top')
+
+# ----------------- End of the actions panel---------------------
+
+# ----------------- Start of the extensions panel---------------------
+
+extensions_frame = ttk.LabelFrame(root, text="Extensions", height=150, width=200)
+extensions_frame.pack(side='right', fill="both", padx=25)
+
+extensions_treeview = ttk.Treeview(extensions_frame)
+extensions_treeview.pack(fill="both", expand=True)
+
+# ----------------- End of the extensions panel---------------------
 root.mainloop()
